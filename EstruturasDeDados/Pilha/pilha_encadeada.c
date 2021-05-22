@@ -40,7 +40,7 @@ int IsEmptyStack(Stack *stack){
     else return 0;
 }
 
-int AddElem(Stack *stack, elem e){
+int AddElemStack(Stack *stack, elem e){
     Node *aux_node = (Node *) malloc(sizeof(Node));
     if (aux_node == NULL) return 1;
 
@@ -82,7 +82,7 @@ int Pop(Stack *stack, elem *e){
     return 0;
 }
 
-Node* SearchElem(Stack *stack, elem e, int *error){
+Node* SearchElemStack(Stack *stack, elem e, int *error){
 
     if(IsEmptyStack(stack)){
         *error = 1;
