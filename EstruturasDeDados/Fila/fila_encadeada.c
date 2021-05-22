@@ -24,16 +24,16 @@ Queue* CreateQueue(){
     return queue;
 }
 
-int IsEmpty(Queue *queue){
+int IsEmptyQueue(Queue *queue){
     if (queue->n_elem == 0) return 1;
     else return 0;
 }
 
-int AddElem(Queue *queue, elem e){
+int AddElemQueue(Queue *queue, elem e){
     Node *aux_node = (Node *) malloc(sizeof(Node));
     if (aux_node == NULL) return 1;
 
-    if (IsEmpty(queue)){
+    if (IsEmptyQueue(queue)){
         queue->first = aux_node;
     }
     else {
@@ -52,7 +52,7 @@ int AddElem(Queue *queue, elem e){
 
 int OutQueue(Queue *queue, elem *e){
 
-    if(IsEmpty(queue)) return 1;
+    if(IsEmptyQueue(queue)) return 1;
 
     *e = queue->first->val;
     
@@ -66,9 +66,9 @@ int OutQueue(Queue *queue, elem *e){
     return 0;
 }
 
-Node* SearchElem(Queue *queue, elem e, int *error){
+Node* SearchElemQueue(Queue *queue, elem e, int *error){
 
-    if(IsEmpty(queue)){
+    if(IsEmptyQueue(queue)){
         *error = 1;
         return NULL;
     }
@@ -89,7 +89,7 @@ Node* SearchElem(Queue *queue, elem e, int *error){
 
 int PrintQueue(Queue *queue){
 
-    if(IsEmpty(queue)) return 1;
+    if(IsEmptyQueue(queue)) return 1;
     
     Node *aux_node = queue->first;
     

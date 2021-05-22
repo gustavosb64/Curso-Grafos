@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Grafo_Lista_Adjacencias/grafos_lista_adjacencias.h"
+#include "../GrafosListaAdjacencias/grafos_lista_adjacencias.h"
 
 #define READLINE_BUFFER 4096
 

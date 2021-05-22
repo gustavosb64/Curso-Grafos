@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "grafos_lista_adjacencias.h"
 #include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
+#include "../EstruturasDeDados/Fila/fila_encadeada.h"
 #include "../ReadPajek/read_pajek.h"
 
 #define READLINE_BUFFER 4096
@@ -22,11 +23,7 @@ int main(int argc, char *argv[]){
     printf("VerticeDeg 4: %d\n", VerticeDeg(G, 3));
     printf("IsEulerian: %d\n", IsEulerian(G));
 
-    Stack *P = Hierholzer(G);
-    PrintStack(P);
-
     FreeGraph(G);
-    FreeStack(P);
     fclose(file);
 
     return 0;

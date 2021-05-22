@@ -2,10 +2,12 @@
 #include <stdlib.h>
 #include "grafos_lista_adjacencias.h"
 #include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
+#include "../EstruturasDeDados/Fila/fila_encadeada.h"
 
 typedef struct node_v_{
     int vertex;
     int value;
+    char colour;
     struct node_v_ *next;
     struct node_v_ *prev;
 }NodeV;
@@ -53,6 +55,7 @@ int Insert(Graph *G, int g_src, int g_dest, int value){
     NodeV *new_edge = (NodeV *) malloc(sizeof(NodeV));
     new_edge->vertex = g_dest;
     new_edge->value = value;
+    new_edge->value = 'w';
     new_edge->next = NULL;
     new_edge->prev = aux_edge;
     
@@ -188,7 +191,8 @@ void FreeGraph(Graph *G){
 }
 
 NodeV* BFS (Graph *G, elem e){
+    Queue *Q_Grey = CreateQueue();          
+     
     
-
     return NULL;
 }
