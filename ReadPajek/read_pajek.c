@@ -24,7 +24,6 @@ char *readline(FILE *stream) {
 
 int getNumVertices(FILE *file){
 
-
     int n_vertices;
     char *str_vertices;
     fseek(file,10,SEEK_SET);

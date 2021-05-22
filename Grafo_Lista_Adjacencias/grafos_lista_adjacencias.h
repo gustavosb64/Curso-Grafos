@@ -1,6 +1,6 @@
 #ifndef GRAFO_LISTA_ADJACENCIAS_H
 #define GRAFO_LISTA_ADJACENCIAS_H
-#include "./Pilha/pilha_encadeada.h"
+#include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
 
 typedef int elem;
 typedef struct node_v_ NodeV;

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "grafos_lista_adjacencias.h"
-#include "./Pilha/pilha_encadeada.h"
+#include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
 
 typedef struct node_v_{
     int vertex;
@@ -184,7 +184,11 @@ void FreeGraph(Graph *G){
     }
 
     free(G);
-
     return;
+}
 
+NodeV* BFS (Graph *G, elem e){
+    
+
+    return NULL;
 }

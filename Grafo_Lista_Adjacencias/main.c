@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "grafos_lista_adjacencias.h"
-#include "./Pilha/pilha_encadeada.h"
-//#include "../ReadPajek/read_pajek.h"
+#include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
 #include "../ReadPajek/read_pajek.h"
 
 #define READLINE_BUFFER 4096
