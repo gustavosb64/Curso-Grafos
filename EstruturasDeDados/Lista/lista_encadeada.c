@@ -176,38 +176,6 @@ int InList(List *list, elem e){
     return check;
 }
 
-/*SearchElemList com nó sentinela (NÃO TESTEI)
-Node* SearchElemList(List *list, elem e, int *error, int *index){
-
-    if(IsEmptyList(list)){
-        *error = 1;
-        return NULL;
-    }
-
-    AddLastElem(list, e);
-
-    Node *dest_node;
-    dest_node = list->first;
-    *index = 0;
-
-    while (dest_node->val != e){
-        dest_node = dest_node->next;
-        *index = *index+1;
-    }
-
-    Node *p; 
-    if (dest_node->next == NULL){
-         p = NULL;
-        *error = 2;
-    }
-    else p = dest_node;
-    
-    RemoveLastElem(list, &e);
-
-    return p;
-}
-*/
-
 Node* SearchElemList(List *list, elem e, int *error, int *index){
 
     if(IsEmptyList(list)){
