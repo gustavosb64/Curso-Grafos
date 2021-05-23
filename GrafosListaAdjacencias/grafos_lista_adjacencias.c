@@ -126,6 +126,8 @@ int IsEulerian(Graph *G){
     return 1;
 }
 
+/*
+ * ALGORITMO DE HIERHOLZER AINDA EM CONSTRUÇÃO
 Stack* Hierholzer(Graph *G){
     if (G == NULL) return NULL;
     if (!IsEulerian(G)) return NULL;
@@ -147,6 +149,7 @@ void HierholzerStack(NodeV *node, Stack *P){
     return;
 
 }
+*/
 
 int IsInAdj(Graph *G, int g_src, int g_dest){
     NodeV *Adj = SearchAdj(G,g_src,g_dest);
