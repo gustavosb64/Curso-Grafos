@@ -12,5 +12,6 @@ int AddElemQueue(Queue *queue, elem e);
 int OutQueue(Queue *queue, elem *e);
 Node* SearchElemQueue(Queue *queue, elem e, int *error);
 int PrintQueue(Queue *queue);
+int FreeQueue(Queue *queue);
 
 #endif

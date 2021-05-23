@@ -76,13 +76,6 @@ int AddFirstElem(List *list, elem e){
     list->first->prev = NULL;
 
     list->n_elem++;
-f (res <= 0){
-        if (res <= (-30)) printf("P");
-        else printf("B");
-        return 0;
-    }
-    printf("R");
-    return 0;
     return 0;
 }
 
@@ -257,10 +250,13 @@ int SearchRemoveElem(List *list, elem *e, elem *dest_e){
     if (index == 0){
         if (RemoveFirstElem(list, dest_e)) return 1;
     }
-    if (index == (list->n_elem-1)){
+    else if (index == (list->n_elem-1)){
         if (RemoveLastElem(list, dest_e)) return 1;
     }
-    else RemoveMiddleElem(dest_node, dest_e);
+    else{
+        RemoveMiddleElem(dest_node, dest_e);
+        list->n_elem--;
+    }
 
     return 0;
 }
@@ -289,6 +285,7 @@ int IndexRemoveElem(List *list, elem *e, int index){
     }
    
     RemoveMiddleElem(aux, e);
+    list->n_elem--;
 
     return 0;
 }
@@ -318,9 +315,30 @@ int PrintList(List *list){
     Node *aux_node = list->first;
     
     while(aux_node!=NULL){
-        printf("%d\n",aux_node->val);
+        printf("%d\n",aux_node->val+1);
         aux_node = aux_node->next;
     }
+
+    return 0;
+}
+
+int FreeList(List *list){
+    
+    if(IsEmptyList(list)){
+        free(list->first); 
+        free(list);
+        return 1;
+    }
+
+    Node *aux_node = list->first;
+    Node *aux_node2;
+    while(aux_node!=NULL){
+        aux_node2 = aux_node;
+        aux_node = aux_node->next;
+        free(aux_node2);
+    }
+    free(aux_node);
+    free(list);
 
     return 0;
 }

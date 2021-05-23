@@ -94,9 +94,31 @@ int PrintQueue(Queue *queue){
     Node *aux_node = queue->first;
     
     while(aux_node!=NULL){
-        printf("%d\n",aux_node->val);
+        printf("%d\n",aux_node->val+1);
         aux_node = aux_node->next;
     }
+
+    return 0;
+}
+
+int FreeQueue(Queue *queue){
+
+    if(IsEmptyQueue(queue)){
+        free(queue->first);
+        free(queue);
+        return 1;
+    }
+    
+    elem e;
+    Node *aux_node = queue->first;
+    Node *aux_node2;
+    while(aux_node != NULL){
+        aux_node2 = aux_node;
+        aux_node = aux_node->next;
+        free(aux_node2);
+    }
+    free(aux_node);
+    free(queue);
 
     return 0;
 }

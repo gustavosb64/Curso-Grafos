@@ -20,5 +20,6 @@ int SearchRemoveElem(List *list, elem *e, elem *dest_elem);
 int IndexRemoveElem(List *list, elem *e, int index);
 int RemoveMiddleElem(Node *node, elem *e);
 int PrintList(List *list);
+int FreeList(List *list);
 
 #endif

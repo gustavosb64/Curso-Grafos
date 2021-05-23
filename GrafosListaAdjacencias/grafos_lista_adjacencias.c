@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "grafos_lista_adjacencias.h"
 #include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
 #include "../EstruturasDeDados/Fila/fila_encadeada.h"
+#include "../EstruturasDeDados/Lista/lista_encadeada.h"
 
+#define INFINITY (INT_MAX/2)
 typedef struct node_v_{
     int vertex;
     int value;
-    char colour;
     struct node_v_ *next;
     struct node_v_ *prev;
 }NodeV;
 
 typedef struct grafo_{
     NodeV *Adj;
+    char colour; //W -> white; B -> black; G -> grey
     int n_vertices;
 }Graph;
 
@@ -23,8 +26,10 @@ Graph* CreateGraph(int n_vertices){
     
     G->n_vertices = n_vertices;
 
-    for (int i=0; i<n_vertices; i++) 
+    for (int i=0; i<n_vertices; i++){
         G[i].Adj = NULL; 
+        G[i].colour = 'W'; 
+    }
 
     return G;
 }
@@ -55,7 +60,6 @@ int Insert(Graph *G, int g_src, int g_dest, int value){
     NodeV *new_edge = (NodeV *) malloc(sizeof(NodeV));
     new_edge->vertex = g_dest;
     new_edge->value = value;
-    new_edge->value = 'w';
     new_edge->next = NULL;
     new_edge->prev = aux_edge;
     
@@ -138,7 +142,7 @@ void HierholzerStack(NodeV *node, Stack *P){
 
     if (node->next != NULL) HierholzerStack(node->next, P);
 
-    AddElem(P, node->vertex+1);
+    AddElemStack(P, node->vertex+1);
 
     return;
 
@@ -191,8 +195,53 @@ void FreeGraph(Graph *G){
 }
 
 NodeV* BFS (Graph *G, elem e){
-    Queue *Q_Grey = CreateQueue();          
-     
-    
+
+    //Lista para nós brancos e pretos e fila para nós cinzas
+    List *L_White = CreateList();
+    List *L_Black = CreateList();
+    Queue *Q_Grey = CreateQueue(); 
+
+    for (int i=1; i<G->n_vertices; i++){
+        G[i].colour = 'W';
+        AddLastElem(L_White, i);
+    }
+
+    AddElemQueue(Q_Grey, 0);
+    G[0].colour = 'G';
+    NodeV *aux_node;
+    int q_index;
+    int aux_e;
+    int dist = 0;
+    while(!IsEmptyQueue(Q_Grey)){ 
+        OutQueue(Q_Grey, &q_index);
+        aux_node = G[q_index].Adj;
+        dist++;
+        while (aux_node != NULL){
+            if (aux_node->vertex == e){
+                FreeList(L_Black);
+                FreeList(L_White);
+                FreeQueue(Q_Grey);
+                printf("Encontrado. Distância: %d\n", dist);
+
+                return aux_node;
+            }
+            
+            if(G[aux_node->vertex].colour == 'W'){
+                AddElemQueue(Q_Grey, aux_node->vertex);
+                SearchRemoveElem(L_White, &aux_node->vertex, &aux_e);
+            }
+            G[aux_node->vertex].colour = 'G';
+            aux_node = aux_node->next;
+        }
+        AddLastElem(L_Black, q_index);
+        G[q_index].colour = 'B';
+    }
+
+    FreeList(L_Black);
+    FreeList(L_White);
+    FreeQueue(Q_Grey);
+
+    printf("Elemento não encontrado!\n");
+
     return NULL;
 }
