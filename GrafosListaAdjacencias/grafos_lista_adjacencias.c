@@ -128,28 +128,48 @@ int IsEulerian(Graph *G){
 
 /*
  * ALGORITMO DE HIERHOLZER AINDA EM CONSTRUÇÃO
+*/
 Stack* Hierholzer(Graph *G){
     if (G == NULL) return NULL;
-    if (!IsEulerian(G)) return NULL;
-    
-    Stack *P = CreateStack();
-    for (int i = 0; i < G[0].n_vertices; i++){
-        HierholzerStack(G[i].Adj, P);
+    if (!IsEulerian(G)){
+        printf("Não se trata de um grafo Euleriano.\n");    
+        return NULL;
+    } 
+
+    List *L_All = CreateList();
+    Stack *S_EulerPath = CreateStack();
+
+    for (int i=0; i<G->n_vertices; i++){
+        AddLastElem(L_All, i);
     }
 
-    return P;
+    HierholzerStack(G, 0, -1, S_EulerPath);
+
+    for (int i=1; i<G->n_vertices; i++){
+        G[i].colour = 'W';
+    }
+
+    PrintStack(S_EulerPath);
+
+    return S_EulerPath;
 }
 
-void HierholzerStack(NodeV *node, Stack *P){
+/*Stack overflow*/
+void HierholzerStack(Graph *G, int index, int parent_index, Stack *S_EulerPath){
+    
+    NodeV *aux_node = G[index].Adj;
+    while (aux_node != NULL){
+        if (aux_node->vertex != parent_index && G[aux_node->vertex].colour != 'B'){
+            HierholzerStack(G, aux_node->vertex, index, S_EulerPath);
+        }
+        aux_node = aux_node->next;
+    }
 
-    if (node->next != NULL) HierholzerStack(node->next, P);
-
-    AddElemStack(P, node->vertex+1);
+    G[index].colour = 'B';
+    AddElemStack(S_EulerPath, index); 
 
     return;
-
 }
-*/
 
 int IsInAdj(Graph *G, int g_src, int g_dest){
     NodeV *Adj = SearchAdj(G,g_src,g_dest);

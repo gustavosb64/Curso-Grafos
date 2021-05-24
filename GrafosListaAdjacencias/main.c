@@ -27,6 +27,7 @@ int main(int argc, char *argv[]){
     elem e = 2;
     BFS(G,7);
 
+    Hierholzer(G);
     FreeGraph(G);
     fclose(file);
 
