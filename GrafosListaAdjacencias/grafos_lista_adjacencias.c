@@ -6,7 +6,6 @@
 #include "../EstruturasDeDados/Fila/fila_encadeada.h"
 #include "../EstruturasDeDados/Lista/lista_encadeada.h"
 
-#define INFINITY (INT_MAX/2)
 typedef struct node_v_{
     int vertex;
     int value;
@@ -159,7 +158,8 @@ void HierholzerStack(Graph *G, int index, int parent_index, Stack *S_EulerPath){
     
     NodeV *aux_node = G[index].Adj;
     while (aux_node != NULL){
-        if (aux_node->vertex != parent_index && G[aux_node->vertex].colour != 'B'){
+        if (aux_node->vertex == parent_index) return;
+        if (G[aux_node->vertex].colour != 'B'){
             HierholzerStack(G, aux_node->vertex, index, S_EulerPath);
         }
         aux_node = aux_node->next;

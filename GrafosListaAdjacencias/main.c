@@ -11,7 +11,7 @@
 int main(int argc, char *argv[]){
 
     FILE *file;
-    file = fopen("amostra_pajek.txt","r");
+    file = fopen("../Amostras/amostra_pajek.txt","r");
 
     int n_vertices = getNumVertices(file);
 
