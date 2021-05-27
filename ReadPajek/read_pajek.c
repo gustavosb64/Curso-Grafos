@@ -37,7 +37,7 @@ int getNumVertices(FILE *file){
 
 void readPajek(Graph *G, FILE *file){
 
-    fseek(file,20,SEEK_SET);
+    fseek(file,7,SEEK_CUR);
     int Mi, Mj;
     char *str1, *str2;
     while(!feof(file)){
