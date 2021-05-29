@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "grafos_lista_adjacencias.h"
-#include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
-#include "../EstruturasDeDados/Fila/fila_encadeada.h"
-#include "../EstruturasDeDados/Lista/lista_encadeada.h"
+#include "../../EstruturasDeDados/Pilha/pilha_encadeada.h"
+#include "../../EstruturasDeDados/Fila/fila_encadeada.h"
+#include "../../EstruturasDeDados/Lista/lista_encadeada.h"
 
 typedef struct node_v_{
     int vertex;
@@ -221,7 +221,16 @@ void FreeGraph(Graph *G){
     return;
 }
 
-NodeV* BFS (Graph *G, elem e){
+
+int** CreateMat(int n){
+
+    int **M = (int **) malloc(n * sizeof(int*));
+    for (int i=0; i < n; i++) M[i] = (int *) malloc(n * sizeof(int));
+
+    return M;
+}
+
+int BFS (Graph *G, elem e){
 
     //Lista para nós brancos e pretos e fila para nós cinzas
     List *L_White = CreateList();
@@ -241,23 +250,30 @@ NodeV* BFS (Graph *G, elem e){
     int dist = 0;
     while(!IsEmptyQueue(Q_Grey)){ 
         OutQueue(Q_Grey, &q_index);
+        if (q_index == e) return dist;
         aux_node = G[q_index].Adj;
         dist++;
-        while (aux_node != NULL){
+        while (aux_node != NULL && G[aux_node->vertex].colour != 'B' && G[aux_node->vertex].colour != 'G'){
+            /*
+            printf("~%d\n",q_index);
+            printf("*%d\n",aux_node->vertex);
+            printf("#%d\n",dist);
+            */
             if (aux_node->vertex == e){
                 FreeList(L_Black);
                 FreeList(L_White);
                 FreeQueue(Q_Grey);
-                printf("Encontrado. Distância: %d\n", dist);
+//                printf("Encontrado. Distância: %d\n", dist);
+//                printf("@%d\n",q_index);
 
-                return aux_node;
+                return dist;
             }
             
             if(G[aux_node->vertex].colour == 'W'){
                 AddElemQueue(Q_Grey, aux_node->vertex);
                 SearchRemoveElem(L_White, &aux_node->vertex, &aux_e);
+                G[aux_node->vertex].colour = 'G';
             }
-            G[aux_node->vertex].colour = 'G';
             aux_node = aux_node->next;
         }
         AddLastElem(L_Black, q_index);
@@ -268,7 +284,88 @@ NodeV* BFS (Graph *G, elem e){
     FreeList(L_White);
     FreeQueue(Q_Grey);
 
-    printf("Elemento não encontrado!\n");
+//    printf("Elemento não encontrado!\n");
+
+    return -1;
+}
+/*
+int** BFS (Graph *G, elem e){
+
+    //Lista para nós brancos e pretos e fila para nós cinzas
+    List *L_White = CreateList();
+    List *L_Black = CreateList();
+    Queue *Q_Grey = CreateQueue(); 
+
+    for (int i=1; i<G->n_vertices; i++){
+        G[i].colour = 'W';
+        AddLastElem(L_White, i);
+    }
+
+    AddElemQueue(Q_Grey, 0);
+    G[0].colour = 'G';
+    NodeV *aux_node;
+    int q_index;
+    int aux_e;
+    int dist = 0;
+
+    int **M = CreateMat(G->n_vertices);
+
+    while(!IsEmptyQueue(Q_Grey)){ 
+        OutQueue(Q_Grey, &q_index);
+        aux_node = G[q_index].Adj;
+        dist++;
+        while (aux_node != NULL){
+//            printf("%d ",M[q_index][aux_node->vertex]);
+            printf("%d ",dist);
+            
+            if(G[aux_node->vertex].colour == 'W'){
+                M[q_index][aux_node->vertex] = dist;
+                AddElemQueue(Q_Grey, aux_node->vertex);
+                SearchRemoveElem(L_White, &aux_node->vertex, &aux_e);
+            }
+            G[aux_node->vertex].colour = 'G';
+            aux_node = aux_node->next;
+        }
+        printf("\n");
+        AddLastElem(L_Black, q_index);
+        G[q_index].colour = 'B';
+    }
+
+    for(int i=0; i<G->n_vertices; i++){
+        for(int j=0; j<G->n_vertices; j++){
+            printf("%d ",M[i][j]);    
+        } 
+        printf("\n");
+    }
+
+
+    FreeList(L_Black);
+    FreeList(L_White);
+    FreeQueue(Q_Grey);
+
 
     return NULL;
 }
+
+void PrintMat(int **M, Graph *G){
+
+    for(int i=0; i<G->n_vertices; i++){
+        for(int j=0; j<G->n_vertices; j++){
+            printf("%d ",M[i][j]);    
+        } 
+        printf("\n");
+    }
+    
+    return;
+}
+
+void FreeMat(int **M, Graph *G){
+
+    for(int i=0; i<G->n_vertices; i++){
+        free(M[i]);
+    }
+    free(M); 
+
+    return;
+}
+*/
