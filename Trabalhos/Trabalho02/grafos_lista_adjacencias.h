@@ -10,19 +10,11 @@ typedef struct grafo_ Graph;
 
 Graph* CreateGraph(int);
 int IsEmpty(NodeV *Adj);
-int VerticeDeg(Graph *, int);
-int IsEulerian(Graph *);
-Stack* Hierholzer(Graph *);
-void HierholzerStack(Graph *, int, int, Stack *);
 int Insert(Graph *, int, int, int);
 int RemoveEdge(Graph *, int, int);
-NodeV* SearchAdj(Graph*, int, int);
-int IsInAdj(Graph*, int, int);
 void PrintGraph(Graph*);
 void FreeGraph(Graph*);
-int BFS(Graph*, elem);
+void BFS(Graph*, elem);
 void PrintBFS(Graph*);
-void PrintMat(int**, Graph*);
-void FreeMat(int**, Graph*);
 
 #endif

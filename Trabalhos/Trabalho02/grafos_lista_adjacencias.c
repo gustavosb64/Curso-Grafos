@@ -71,121 +71,6 @@ int Insert(Graph *G, int g_src, int g_dest, int value){
     return 0;
 }   
 
-int RemoveEdge(Graph *G, int g_src, int g_dest){
-     
-    if (G == NULL || (IsEmpty(G[g_src].Adj))) return 1;
-
-    NodeV *n_aux = SearchAdj(G, g_src, g_dest);
-    NodeV *n_aux_prev = n_aux->prev;
-
-    if (n_aux_prev == NULL) G[g_src].Adj = n_aux->next;
-    else n_aux_prev->next = n_aux->next;
-
-    free(n_aux);
-
-    return 0;
-}
-
-NodeV* SearchAdj(Graph *G, int g_src, int g_dest){
-    
-    if (G == NULL || (IsEmpty(G[g_src].Adj))) return NULL;
-    
-    NodeV *aux_adj = G[g_src].Adj; 
-    while (aux_adj != NULL){
-        if (aux_adj->vertex == g_dest) return aux_adj;
-        aux_adj = aux_adj->next;
-    } 
-
-    return NULL;
-}
-
-//Retorna o grau do vertice
-int VerticeDeg(Graph *G, int v){
-
-    if (G[v].Adj == NULL) return 0;
-
-    int n = 0;
-    NodeV *aux = G[v].Adj;
-    while (aux != NULL){
-        n++;  
-        aux = aux->next;
-    }
-    return n;
-}
-
-/*retorna 1 caso todos pares, 2 caso 1 ou 2 impares e 2 caso mais de 2 impares
-*/
-int IsEulerian(Graph *G){
-    int n_odd = 0; 
-
-    for(int i=0; i < G[0].n_vertices; i++){
-        if (VerticeDeg(G, i)%2) n_odd++;
-    }
-
-    if (n_odd > 2) return 0;
-    if (n_odd != 0) return 2;
-
-    return 1;
-}
-
-/*
- * ALGORITMO DE HIERHOLZER AINDA EM CONSTRUÇÃO
-*/
-Stack* Hierholzer(Graph *G){
-    if (G == NULL) return NULL;
-    if (!IsEulerian(G)){
-        printf("Não se trata de um grafo Euleriano.\n");    
-        return NULL;
-    } 
-
-    List *L_All = CreateList();
-    Stack *S_EulerPath = CreateStack();
-
-    for (int i=0; i<G->n_vertices; i++){
-        AddLastElem(L_All, i);
-    }
-
-    HierholzerStack(G, 0, -1, S_EulerPath);
-
-    for (int i=1; i<G->n_vertices; i++){
-        G[i].colour = 'W';
-    }
-
-    PrintStack(S_EulerPath);
-
-    return S_EulerPath;
-}
-
-/*
- * Sem stack overflow, porém ainda não funcional
-*/
-void HierholzerStack(Graph *G, int index, int parent_index, Stack *S_EulerPath){
-    
-    printf("index: %d\tparent: %d\n",index+1,parent_index+1);
-    NodeV *aux_node = G[index].Adj;
-    while (aux_node != NULL){
-        if (aux_node->vertex == parent_index) return;
-        if (G[aux_node->vertex].colour != 'B'){
-            HierholzerStack(G, aux_node->vertex, index, S_EulerPath);
-        }
-        aux_node = aux_node->next;
-    }
-
-    G[index].colour = 'B';
-    AddElemStack(S_EulerPath, index); 
-    printf("cheguei\n");
-
-    return;
-}
-
-int IsInAdj(Graph *G, int g_src, int g_dest){
-    NodeV *Adj = SearchAdj(G,g_src,g_dest);
-
-    if (Adj == NULL) return 0;
-    
-    return 1;
-}
-
 void PrintGraph(Graph *G){
     NodeV *aux;
     
@@ -223,16 +108,7 @@ void FreeGraph(Graph *G){
     return;
 }
 
-
-int** CreateMat(int n){
-
-    int **M = (int **) malloc(n * sizeof(int*));
-    for (int i=0; i < n; i++) M[i] = (int *) malloc(n * sizeof(int));
-
-    return M;
-}
-
-int BFS (Graph *G, elem e){
+void BFS (Graph *G, elem e){
 
     List *L_White = CreateList();
     List *L_Black = CreateList();
@@ -269,7 +145,7 @@ int BFS (Graph *G, elem e){
     FreeList(L_Black);
     FreeQueue(Q_Grey);
 
-    return 0;
+    return;
 }
 
 void PrintBFS(Graph *G){
