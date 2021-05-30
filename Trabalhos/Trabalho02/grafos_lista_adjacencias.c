@@ -6,6 +6,8 @@
 #include "../../EstruturasDeDados/Fila/fila_encadeada.h"
 #include "../../EstruturasDeDados/Lista/lista_encadeada.h"
 
+#define INFINITY INT_MAX/2
+
 typedef struct node_v_{
     int vertex;
     int value;
@@ -17,6 +19,7 @@ typedef struct grafo_{
     NodeV *Adj;
     char colour; //W -> white; B -> black; G -> grey
     int n_vertices;
+    int dist;
 }Graph;
 
 Graph* CreateGraph(int n_vertices){
@@ -28,6 +31,7 @@ Graph* CreateGraph(int n_vertices){
     for (int i=0; i<n_vertices; i++){
         G[i].Adj = NULL; 
         G[i].colour = 'W'; 
+        G[i].dist = INFINITY;
     }
 
     return G;
@@ -112,7 +116,6 @@ int VerticeDeg(Graph *G, int v){
 /*retorna 1 caso todos pares, 2 caso 1 ou 2 impares e 2 caso mais de 2 impares
 */
 int IsEulerian(Graph *G){
-    int i = 0; 
     int n_odd = 0; 
 
     for(int i=0; i < G[0].n_vertices; i++){
@@ -185,7 +188,6 @@ int IsInAdj(Graph *G, int g_src, int g_dest){
 
 void PrintGraph(Graph *G){
     NodeV *aux;
-    NodeV *aux2;
     
     for (int i=0; i<G->n_vertices; i++){
         if (G[i].Adj != NULL){
@@ -232,140 +234,53 @@ int** CreateMat(int n){
 
 int BFS (Graph *G, elem e){
 
-    //Lista para nós brancos e pretos e fila para nós cinzas
     List *L_White = CreateList();
     List *L_Black = CreateList();
-    Queue *Q_Grey = CreateQueue(); 
-
-    for (int i=1; i<G->n_vertices; i++){
-        G[i].colour = 'W';
-        AddLastElem(L_White, i);
-    }
-
-    AddElemQueue(Q_Grey, 0);
-    G[0].colour = 'G';
-    NodeV *aux_node;
-    int q_index;
-    int aux_e;
-    int dist = 0;
-    while(!IsEmptyQueue(Q_Grey)){ 
-        OutQueue(Q_Grey, &q_index);
-        if (q_index == e) return dist;
-        aux_node = G[q_index].Adj;
-        dist++;
-        while (aux_node != NULL && G[aux_node->vertex].colour != 'B' && G[aux_node->vertex].colour != 'G'){
-            /*
-            printf("~%d\n",q_index);
-            printf("*%d\n",aux_node->vertex);
-            printf("#%d\n",dist);
-            */
-            if (aux_node->vertex == e){
-                FreeList(L_Black);
-                FreeList(L_White);
-                FreeQueue(Q_Grey);
-//                printf("Encontrado. Distância: %d\n", dist);
-//                printf("@%d\n",q_index);
-
-                return dist;
-            }
-            
-            if(G[aux_node->vertex].colour == 'W'){
-                AddElemQueue(Q_Grey, aux_node->vertex);
-                SearchRemoveElem(L_White, &aux_node->vertex, &aux_e);
-                G[aux_node->vertex].colour = 'G';
-            }
-            aux_node = aux_node->next;
-        }
-        AddLastElem(L_Black, q_index);
-        G[q_index].colour = 'B';
-    }
-
-    FreeList(L_Black);
-    FreeList(L_White);
-    FreeQueue(Q_Grey);
-
-//    printf("Elemento não encontrado!\n");
-
-    return -1;
-}
-/*
-int** BFS (Graph *G, elem e){
-
-    //Lista para nós brancos e pretos e fila para nós cinzas
-    List *L_White = CreateList();
-    List *L_Black = CreateList();
-    Queue *Q_Grey = CreateQueue(); 
-
-    for (int i=1; i<G->n_vertices; i++){
-        G[i].colour = 'W';
-        AddLastElem(L_White, i);
-    }
-
-    AddElemQueue(Q_Grey, 0);
-    G[0].colour = 'G';
-    NodeV *aux_node;
-    int q_index;
-    int aux_e;
-    int dist = 0;
-
-    int **M = CreateMat(G->n_vertices);
-
-    while(!IsEmptyQueue(Q_Grey)){ 
-        OutQueue(Q_Grey, &q_index);
-        aux_node = G[q_index].Adj;
-        dist++;
-        while (aux_node != NULL){
-//            printf("%d ",M[q_index][aux_node->vertex]);
-            printf("%d ",dist);
-            
-            if(G[aux_node->vertex].colour == 'W'){
-                M[q_index][aux_node->vertex] = dist;
-                AddElemQueue(Q_Grey, aux_node->vertex);
-                SearchRemoveElem(L_White, &aux_node->vertex, &aux_e);
-            }
-            G[aux_node->vertex].colour = 'G';
-            aux_node = aux_node->next;
-        }
-        printf("\n");
-        AddLastElem(L_Black, q_index);
-        G[q_index].colour = 'B';
-    }
+    Queue *Q_Grey = CreateQueue();
 
     for(int i=0; i<G->n_vertices; i++){
-        for(int j=0; j<G->n_vertices; j++){
-            printf("%d ",M[i][j]);    
-        } 
-        printf("\n");
+        AddLastElem(L_White, i);
+        G[i].colour = 'W';
+        G[i].dist = INFINITY;
+    }
+    AddElemQueue(Q_Grey, e);
+    G[e].colour = 'G';
+    G[e].dist = 0;
+
+    int aux_e;
+    int q_index;
+    while(!IsEmptyQueue(Q_Grey)){
+        OutQueue(Q_Grey, &q_index); 
+        NodeV *aux_v = G[q_index].Adj;
+        while (aux_v != NULL){
+            if (G[aux_v->vertex].colour == 'W'){
+                AddElemQueue(Q_Grey, aux_v->vertex);
+                G[aux_v->vertex].colour = 'G';
+                G[aux_v->vertex].dist = G[q_index].dist + 1;
+                SearchRemoveElem(L_White, &aux_v->vertex, &aux_e);
+            }
+            aux_v = aux_v->next;
+        }
+        G[q_index].colour = 'B';
+        AddLastElem(L_Black, q_index);
     }
 
-
-    FreeList(L_Black);
     FreeList(L_White);
+    FreeList(L_Black);
     FreeQueue(Q_Grey);
 
-
-    return NULL;
+    return 0;
 }
 
-void PrintMat(int **M, Graph *G){
-
-    for(int i=0; i<G->n_vertices; i++){
-        for(int j=0; j<G->n_vertices; j++){
-            printf("%d ",M[i][j]);    
-        } 
-        printf("\n");
-    }
+void PrintBFS(Graph *G){
     
-    return;
-}
-
-void FreeMat(int **M, Graph *G){
-
-    for(int i=0; i<G->n_vertices; i++){
-        free(M[i]);
+    for (int j=0; j<G->n_vertices; j++){
+        BFS(G, j);
+        for(int i=0; i<G->n_vertices; i++){
+            printf("%d ",G[i].dist);
+        }    
+        printf("\n");
     }
-    free(M); 
-
+ 
     return;
 }
-*/

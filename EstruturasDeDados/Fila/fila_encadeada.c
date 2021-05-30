@@ -109,7 +109,6 @@ int FreeQueue(Queue *queue){
         return 1;
     }
     
-    elem e;
     Node *aux_node = queue->first;
     Node *aux_node2;
     while(aux_node != NULL){

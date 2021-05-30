@@ -20,7 +20,8 @@ NodeV* SearchAdj(Graph*, int, int);
 int IsInAdj(Graph*, int, int);
 void PrintGraph(Graph*);
 void FreeGraph(Graph*);
-int BFS(Graph*, elem e);
+int BFS(Graph*, elem);
+void PrintBFS(Graph*);
 void PrintMat(int**, Graph*);
 void FreeMat(int**, Graph*);
 

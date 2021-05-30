@@ -8,14 +8,16 @@
 char *readline(FILE *stream) {
     char *string = 0;
     int pos = 0; 
-
 	do{
         if (pos % READLINE_BUFFER == 0) {
             string = (char *) realloc(string, (pos / READLINE_BUFFER + 1) * READLINE_BUFFER);
         }
         string[pos] = (char) fgetc(stream);
-    }while(string[pos++] != '\n' && string[pos-1] != ' ' && string[pos-1] != '\r' && !feof(stream));
+    }while(string[pos++] != '\n' && string[pos-1] != '\r' && string[pos-1] != ' ' && !feof(stream));
 
+    if (string[pos-1] == '\r'){
+        fseek(stream,1,SEEK_CUR);
+    }
     string[pos-1] = 0;
     string = (char *) realloc(string, pos);
 
@@ -37,7 +39,7 @@ int getNumVertices(FILE *file){
 
 void readPajek(Graph *G, FILE *file){
 
-    fseek(file,7,SEEK_CUR);
+    fseek(file,8,SEEK_CUR);
     int Mi, Mj;
     char *str1, *str2;
     while(!feof(file)){
