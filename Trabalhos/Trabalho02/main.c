@@ -10,6 +10,9 @@
 
 int main(int argc, char *argv[]){
 
+    char *string;
+    string = readline(stdin);
+
     FILE *file;
     file = fopen("grafo1.pajek","r");
 
@@ -24,5 +27,7 @@ int main(int argc, char *argv[]){
 
     FreeGraph(G);
     fclose(file);
+    free(string);
+
     return 0;
 }

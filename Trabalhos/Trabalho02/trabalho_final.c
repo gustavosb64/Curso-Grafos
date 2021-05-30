@@ -655,8 +655,11 @@ void readPajek(Graph *G, FILE *file){
 
 int main(int argc, char *argv[]){
 
+    char *string;
+    string = readline(stdin);
+
     FILE *file;
-    file = fopen("grafo1.pajek","r");
+    file = fopen(string,"r");
 
     int n_vertices = getNumVertices(file);
 
@@ -669,5 +672,7 @@ int main(int argc, char *argv[]){
 
     FreeGraph(G);
     fclose(file);
+    free(string);
+
     return 0;
 }
