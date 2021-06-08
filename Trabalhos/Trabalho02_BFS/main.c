@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "grafos_lista_adjacencias.h"
+#include "../../GrafosListaAdjacencias/grafos_lista_adjacencias.h"
 #include "../../EstruturasDeDados/Pilha/pilha_encadeada.h"
 #include "../../EstruturasDeDados/Fila/fila_encadeada.h"
 #include "../../EstruturasDeDados/Lista/lista_encadeada.h"
-#include "./read_pajek.h"
+#include "../../ReadPajek/read_pajek.h"
+#include "trabalho02_BFS.h"
 
 #define READLINE_BUFFER 4096
 
@@ -14,7 +15,7 @@ int main(int argc, char *argv[]){
     string = readline(stdin);
 
     FILE *file;
-    file = fopen("grafo1.pajek","r");
+    file = fopen(string,"r");
 
     int n_vertices = getNumVertices(file);
 

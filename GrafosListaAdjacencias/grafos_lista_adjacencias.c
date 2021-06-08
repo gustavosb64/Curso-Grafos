@@ -17,6 +17,7 @@ typedef struct grafo_{
     NodeV *Adj;
     char colour; //W -> white; B -> black; G -> grey
     int n_vertices;
+    int dist;
 }Graph;
 
 Graph* CreateGraph(int n_vertices){
@@ -112,7 +113,6 @@ int VerticeDeg(Graph *G, int v){
 /*retorna 1 caso todos pares, 2 caso 1 ou 2 impares e 2 caso mais de 2 impares
 */
 int IsEulerian(Graph *G){
-    int i = 0; 
     int n_odd = 0; 
 
     for(int i=0; i < G[0].n_vertices; i++){
@@ -127,7 +127,6 @@ int IsEulerian(Graph *G){
 
 /*
  * ALGORITMO DE HIERHOLZER AINDA EM CONSTRUÇÃO
-*/
 Stack* Hierholzer(Graph *G){
     if (G == NULL) return NULL;
     if (!IsEulerian(G)){
@@ -152,10 +151,10 @@ Stack* Hierholzer(Graph *G){
 
     return S_EulerPath;
 }
+*/
 
 /*
  * Sem stack overflow, porém ainda não funcional
-*/
 void HierholzerStack(Graph *G, int index, int parent_index, Stack *S_EulerPath){
     
     printf("index: %d\tparent: %d\n",index+1,parent_index+1);
@@ -174,6 +173,7 @@ void HierholzerStack(Graph *G, int index, int parent_index, Stack *S_EulerPath){
 
     return;
 }
+*/
 
 int IsInAdj(Graph *G, int g_src, int g_dest){
     NodeV *Adj = SearchAdj(G,g_src,g_dest);
@@ -185,7 +185,6 @@ int IsInAdj(Graph *G, int g_src, int g_dest){
 
 void PrintGraph(Graph *G){
     NodeV *aux;
-    NodeV *aux2;
     
     for (int i=0; i<G->n_vertices; i++){
         if (G[i].Adj != NULL){
@@ -235,29 +234,30 @@ NodeV* BFS (Graph *G, elem e){
 
     AddElemQueue(Q_Grey, 0);
     G[0].colour = 'G';
+    G[0].dist = 0;
     NodeV *aux_node;
     int q_index;
     int aux_e;
-    int dist = 0;
     while(!IsEmptyQueue(Q_Grey)){ 
         OutQueue(Q_Grey, &q_index);
         aux_node = G[q_index].Adj;
-        dist++;
         while (aux_node != NULL){
+            printf("aux_node->vertex: %d\tDistance: %d\n", aux_node->vertex, G[q_index].dist);
             if (aux_node->vertex == e){
                 FreeList(L_Black);
                 FreeList(L_White);
                 FreeQueue(Q_Grey);
-                printf("Encontrado. Distância: %d\n", dist);
+                printf("Element found. Distance: %d\n", G[q_index].dist + 1);
 
                 return aux_node;
             }
             
             if(G[aux_node->vertex].colour == 'W'){
                 AddElemQueue(Q_Grey, aux_node->vertex);
+                G[aux_node->vertex].dist = G[q_index].dist + 1;
+                G[aux_node->vertex].colour = 'G';
                 SearchRemoveElem(L_White, &aux_node->vertex, &aux_e);
             }
-            G[aux_node->vertex].colour = 'G';
             aux_node = aux_node->next;
         }
         AddLastElem(L_Black, q_index);
@@ -268,7 +268,7 @@ NodeV* BFS (Graph *G, elem e){
     FreeList(L_White);
     FreeQueue(Q_Grey);
 
-    printf("Elemento não encontrado!\n");
+    printf("Element not found!\n");
 
     return NULL;
 }

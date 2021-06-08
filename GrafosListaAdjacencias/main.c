@@ -11,7 +11,7 @@
 int main(int argc, char *argv[]){
 
     FILE *file;
-    file = fopen("../Amostras/grafo3.pajek","r");
+    file = fopen("../Amostras/amostra_pajek.txt","r");
 
     int n_vertices = getNumVertices(file);
 
@@ -27,7 +27,6 @@ int main(int argc, char *argv[]){
     elem e = 2;
     BFS(G,7);
 
-    Hierholzer(G);
     FreeGraph(G);
     fclose(file);
 

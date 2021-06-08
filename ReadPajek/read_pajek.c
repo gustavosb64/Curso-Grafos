@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../GrafosListaAdjacencias/grafos_lista_adjacencias.h"
 
 #define READLINE_BUFFER 4096
@@ -15,9 +16,15 @@ char *readline(FILE *stream) {
         }
         string[pos] = (char) fgetc(stream);
     }while(string[pos++] != '\n' && string[pos-1] != ' ' && string[pos-1] != '\r' && !feof(stream));
-
+    
+    if (string[pos-1] == '\r'){
+        fseek(stream,1,SEEK_CUR);
+    }
     string[pos-1] = 0;
     string = (char *) realloc(string, pos);
+
+    for (int i=0; i<strlen(string); i++)
+        printf("%d ",string[i]);
 
     return string;
 }
@@ -37,7 +44,7 @@ int getNumVertices(FILE *file){
 
 void readPajek(Graph *G, FILE *file){
 
-    fseek(file,7,SEEK_CUR);
+    readline(file);
     int Mi, Mj;
     char *str1, *str2;
     while(!feof(file)){
