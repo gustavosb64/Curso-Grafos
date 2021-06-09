@@ -5,6 +5,7 @@
 #include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
 #include "../EstruturasDeDados/Fila/fila_encadeada.h"
 #include "../EstruturasDeDados/Lista/lista_encadeada.h"
+#include "../ReadPajek/read_pajek.h"
 
 typedef struct node_v_{
     int vertex;
@@ -269,6 +270,50 @@ NodeV* BFS (Graph *G, elem e){
     FreeQueue(Q_Grey);
 
     printf("Element not found!\n");
+
+    return NULL;
+}
+
+int RecursiveDFS(Graph *G, NodeV *node, elem e, int *cont){
+    *cont = *cont + 1;
+
+    NodeV* aux_node = node;
+    while (aux_node != NULL){
+        if (G[aux_node->vertex].colour == 'W'){
+            G[aux_node->vertex].colour = 'G';
+            G[aux_node->vertex].Adj;
+            RecursiveDFS(G, G[aux_node->vertex].Adj, e, cont);
+        }
+        aux_node = aux_node->next;
+    }
+
+    
+    return *cont;
+}
+
+NodeV* DFS(Graph *G, elem e){
+
+    for(int i=0; i<G->n_vertices; i++){
+        G[i].colour = 'W';    
+    }
+
+    FILE *fRoot = fopen("../Amostras/ArquivosDFS/Raiz.txt","r");
+    if (fRoot == NULL){
+        printf("Arquivo não encontrado!\n");
+        return NULL;
+    }
+
+    char *sRoot = readline(fRoot);
+    int root = atoi(sRoot);
+    free(sRoot);
+ 
+    int cont = 0;
+
+    G[root].colour = 'G';
+    RecursiveDFS(G, G[root].Adj,e, &cont);
+    printf("cont: %d\n",cont);
+
+    fclose(fRoot);
 
     return NULL;
 }

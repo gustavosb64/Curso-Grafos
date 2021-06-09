@@ -11,7 +11,8 @@
 int main(int argc, char *argv[]){
 
     FILE *file;
-    file = fopen("../Amostras/amostra_pajek.txt","r");
+//    file = fopen("../Amostras/ArquivosDFS/dfs_teste.txt","r");
+    file = fopen("../Amostras/ArquivosDFS/teste.txt","r");
 
     int n_vertices = getNumVertices(file);
 
@@ -21,11 +22,14 @@ int main(int argc, char *argv[]){
     readPajek(G, file);
     PrintGraph(G);
 
+    DFS(G,3);
+
+    /*
     printf("VerticeDeg 4: %d\n", VerticeDeg(G, 4));
     printf("IsEulerian: %d\n", IsEulerian(G));
 
     elem e = 2;
-    BFS(G,7);
+    */
 
     FreeGraph(G);
     fclose(file);
