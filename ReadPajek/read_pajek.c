@@ -23,9 +23,6 @@ char *readline(FILE *stream) {
     string[pos-1] = 0;
     string = (char *) realloc(string, pos);
 
-    for (int i=0; i<strlen(string); i++)
-        printf("%d ",string[i]);
-
     return string;
 }
 
@@ -44,7 +41,8 @@ int getNumVertices(FILE *file){
 
 void readPajek(Graph *G, FILE *file){
 
-    readline(file);
+    free(readline(file));
+
     int Mi, Mj;
     char *str1, *str2;
     while(!feof(file)){
