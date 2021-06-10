@@ -317,14 +317,17 @@ Stack* DFS(Graph *G, elem e){
 
     //stores the time each vertex were last visited
     int **local_clock = (int **) malloc(G->n_vertices * sizeof(int*));
-    for (int i=0; i<2; i++) local_clock[i] = (int *) malloc(2 * sizeof(int));
+    for (int i=0; i<G->n_vertices; i++) local_clock[i] = (int *) malloc(2 * sizeof(int));
     int time;
 
     RecursiveDFS(G, root, e, &time, local_clock, B_Stack);
     PrintStack(B_Stack);
 
     fclose(fRoot);
-    free(B_Stack);
+    FreeStack(B_Stack);
+    for (int i=0; i<G->n_vertices; i++) 
+        free(local_clock[i]);
+    free(local_clock);
 
     return NULL;
 }
