@@ -110,7 +110,7 @@ int PrintStack(Stack *stack){
     Node *aux_node = stack->first;
     
     while(aux_node!=NULL){
-        printf("%d\n",aux_node->val);
+        printf("%d\n",aux_node->val+1);
         aux_node = aux_node->next;
     }
 
