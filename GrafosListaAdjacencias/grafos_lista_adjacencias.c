@@ -274,46 +274,57 @@ NodeV* BFS (Graph *G, elem e){
     return NULL;
 }
 
-int RecursiveDFS(Graph *G, NodeV *node, elem e, int *cont){
-    *cont = *cont + 1;
+void RecursiveDFS(Graph *G, int cur_index, elem e, int *time, int **local_clock, Stack *B_Stack){
 
-    NodeV* aux_node = node;
+    if(G[cur_index].Adj == NULL || G[cur_index].colour != 'W') return;
+
+    (*time)++;
+    G[cur_index].colour = 'G';
+    local_clock[cur_index][0] = *time;
+    
+    NodeV* aux_node = G[cur_index].Adj;
     while (aux_node != NULL){
-        if (G[aux_node->vertex].colour == 'W'){
-            G[aux_node->vertex].colour = 'G';
-            G[aux_node->vertex].Adj;
-            RecursiveDFS(G, G[aux_node->vertex].Adj, e, cont);
-        }
+        RecursiveDFS(G, aux_node->vertex, e, time, local_clock, B_Stack);
         aux_node = aux_node->next;
     }
 
-    
-    return *cont;
+    G[cur_index].colour = 'B';
+    AddElemStack(B_Stack, cur_index);
+    local_clock[cur_index][1] = *time;
+    return;
 }
 
-NodeV* DFS(Graph *G, elem e){
+Stack* DFS(Graph *G, elem e){
 
     for(int i=0; i<G->n_vertices; i++){
         G[i].colour = 'W';    
     }
 
+    //file with root
     FILE *fRoot = fopen("../Amostras/ArquivosDFS/Raiz.txt","r");
     if (fRoot == NULL){
         printf("Arquivo não encontrado!\n");
         return NULL;
     }
 
+    //decremented for reading
     char *sRoot = readline(fRoot);
-    int root = atoi(sRoot);
+    int root = atoi(sRoot) - 1;
     free(sRoot);
  
-    int cont = 0;
+    //stack with last visited vertices
+    Stack *B_Stack = CreateStack();
 
-    G[root].colour = 'G';
-    RecursiveDFS(G, G[root].Adj,e, &cont);
-    printf("cont: %d\n",cont);
+    //stores the time each vertex were last visited
+    int **local_clock = (int **) malloc(G->n_vertices * sizeof(int*));
+    for (int i=0; i<2; i++) local_clock[i] = (int *) malloc(2 * sizeof(int));
+    int time;
+
+    RecursiveDFS(G, root, e, &time, local_clock, B_Stack);
+    PrintStack(B_Stack);
 
     fclose(fRoot);
+    free(B_Stack);
 
     return NULL;
 }

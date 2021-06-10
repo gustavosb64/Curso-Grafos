@@ -21,6 +21,6 @@ int IsInAdj(Graph*, int, int);
 void PrintGraph(Graph*);
 void FreeGraph(Graph*);
 NodeV* BFS(Graph*, elem);
-NodeV* DFS(Graph*, elem);
+Stack* DFS(Graph*, elem);
 
 #endif
