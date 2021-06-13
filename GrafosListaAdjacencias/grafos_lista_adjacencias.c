@@ -290,6 +290,7 @@ void RecursiveDFS(Graph *G, int cur_index, elem e, int *time, int **local_clock,
 
     G[cur_index].colour = 'B';
     AddElemStack(B_Stack, cur_index);
+    (*time)++;
     local_clock[cur_index][1] = *time;
     return;
 }
@@ -321,7 +322,13 @@ Stack* DFS(Graph *G, elem e){
     int time;
 
     RecursiveDFS(G, root, e, &time, local_clock, B_Stack);
+
+    /* Print the B_Stack and the time each vertex had been found
     PrintStack(B_Stack);
+    for (int i=0; i<G->n_vertices; i++)
+        printf("%d: %d\t%d\n",i+1,local_clock[i][0],local_clock[i][1]);
+    */
+
 
     fclose(fRoot);
     FreeStack(B_Stack);
