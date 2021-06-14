@@ -41,7 +41,10 @@ int getNumVertices(FILE *file){
 
 void readPajek(Graph *G, FILE *file){
 
-    free(readline(file));
+    char* string = readline(file);
+    int directed;
+    if (!strcmp(string, "*Arcs")) directed = 0;
+    else directed = 1;
 
     int Mi, Mj;
     char *str1, *str2;
@@ -58,7 +61,7 @@ void readPajek(Graph *G, FILE *file){
         if (Mi == 0 || Mj == 0) break;
 
         Insert(G, Mi-1, Mj-1, 1);
-        Insert(G, Mj-1, Mi-1, 1);
+        if (directed) Insert(G, Mj-1, Mi-1, 1);
     }
 
     return;
