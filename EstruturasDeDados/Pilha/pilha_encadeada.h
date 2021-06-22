@@ -13,6 +13,7 @@ int AddElemStack(Stack *stack, elem e);
 int Pop(Stack *stack, elem *e);
 Node* SearchElemStack(Stack *stack, elem e, int *error);
 int PrintStack(Stack *stack);
+int getNumElem(Stack *stack);
 int FreeStack(Stack *stack);
 
 #endif

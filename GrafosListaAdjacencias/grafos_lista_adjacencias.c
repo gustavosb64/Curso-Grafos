@@ -7,6 +7,8 @@
 #include "../EstruturasDeDados/Lista/lista_encadeada.h"
 #include "../ReadPajek/read_pajek.h"
 
+#define INFINITY INT_MAX
+
 typedef struct node_v_{
     int vertex;
     int value;
@@ -19,6 +21,8 @@ typedef struct grafo_{
     char colour; //W -> white; B -> black; G -> grey
     int n_vertices;
     int dist;
+    int time_f;
+    int time_l;
 }Graph;
 
 Graph* CreateGraph(int n_vertices){
@@ -274,24 +278,28 @@ NodeV* BFS (Graph *G, elem e){
     return NULL;
 }
 
-void RecursiveDFS(Graph *G, int cur_index, elem e, int *time, int **local_clock, Stack *B_Stack){
+void RecursiveDFS(Graph *G, int cur_index, elem e, int *time, Stack *B_Stack){
 
     if(G[cur_index].Adj == NULL || G[cur_index].colour != 'W') return;
 
-    (*time)++;
+    *time = *time + 1;
+    int aux_time = *time;
     G[cur_index].colour = 'G';
-    local_clock[cur_index][0] = *time;
-    
+//    printf("cur_index: %d\tlocal_clock address: %p\n", cur_index, &local_clock[cur_index][0]);
+//    local_clock[cur_index][0] = *time;
+//    G[cur_index].time_f = aux_time; 
+ 
     NodeV* aux_node = G[cur_index].Adj;
     while (aux_node != NULL){
-        RecursiveDFS(G, aux_node->vertex, e, time, local_clock, B_Stack);
+        RecursiveDFS(G, aux_node->vertex, e, time, B_Stack);
         aux_node = aux_node->next;
     }
 
     G[cur_index].colour = 'B';
     AddElemStack(B_Stack, cur_index);
     (*time)++;
-    local_clock[cur_index][1] = *time;
+//    local_clock[cur_index][1] = *time;
+//    G[cur_index].time_l = time;
     return;
 }
 
@@ -299,6 +307,8 @@ Stack* DFS(Graph *G, elem e){
 
     for(int i=0; i<G->n_vertices; i++){
         G[i].colour = 'W';    
+        G[i].time_f = INFINITY;
+        G[i].time_l = INFINITY;
     }
 
     //file with root
@@ -316,25 +326,30 @@ Stack* DFS(Graph *G, elem e){
     //stack with last visited vertices
     Stack *B_Stack = CreateStack();
 
+    /*
     //stores the time each vertex were last visited
     int **local_clock = (int **) malloc(G->n_vertices * sizeof(int*));
-    for (int i=0; i<G->n_vertices; i++) local_clock[i] = (int *) malloc(2 * sizeof(int));
+    for (int i=0; i<G->n_vertices; i++){
+       local_clock[i] = (int *) malloc(2 * sizeof(int));
+       for (int j=0; j < 2; j++) local_clock[i][j] = INFINITY;
+    }
+    */
     int time;
 
-    RecursiveDFS(G, root, e, &time, local_clock, B_Stack);
+    RecursiveDFS(G, root, e, &time, B_Stack);
 
-    /* Print the B_Stack and the time each vertex had been found
+    /*
+    //Print the B_Stack and the time each vertex had been found
     PrintStack(B_Stack);
     for (int i=0; i<G->n_vertices; i++)
         printf("%d: %d\t%d\n",i+1,local_clock[i][0],local_clock[i][1]);
     */
 
+    PrintStack(B_Stack);
+    printf("n_elem: %d\n", getNumElem(B_Stack));
 
     fclose(fRoot);
     FreeStack(B_Stack);
-    for (int i=0; i<G->n_vertices; i++) 
-        free(local_clock[i]);
-    free(local_clock);
 
     return NULL;
 }
