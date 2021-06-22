@@ -274,67 +274,69 @@ NodeV* BFS (Graph *G, elem e){
     return NULL;
 }
 
-void RecursiveDFS(Graph *G, int cur_index, elem e, int *time, int **local_clock, Stack *B_Stack){
+void RecursiveDFS(Graph *G, int cur_index, elem e, Stack *B_Stack, List *W_List){
 
-    if(G[cur_index].Adj == NULL || G[cur_index].colour != 'W') return;
+    if(G[cur_index].colour != 'W') return;
 
-    (*time)++;
-    G[cur_index].colour = 'G';
-    local_clock[cur_index][0] = *time;
-    
-    NodeV* aux_node = G[cur_index].Adj;
-    while (aux_node != NULL){
-        RecursiveDFS(G, aux_node->vertex, e, time, local_clock, B_Stack);
-        aux_node = aux_node->next;
+    int aux_e;
+    SearchRemoveElem(W_List, &cur_index, &aux_e);
+
+    if(G[cur_index].Adj != NULL){
+        G[cur_index].colour = 'G';
+
+        NodeV* aux_node = G[cur_index].Adj;
+        while (aux_node != NULL){
+            RecursiveDFS(G, aux_node->vertex, e, B_Stack, W_List);
+            aux_node = aux_node->next;
+        }
+
     }
 
     G[cur_index].colour = 'B';
     AddElemStack(B_Stack, cur_index);
-    (*time)++;
-    local_clock[cur_index][1] = *time;
+
     return;
 }
 
 Stack* DFS(Graph *G, elem e){
 
+    Stack *B_Stack = CreateStack();
+    List *W_List = CreateList();
+
     for(int i=0; i<G->n_vertices; i++){
         G[i].colour = 'W';    
+        AddLastElem(W_List,i);
     }
 
-    //file with root
-    FILE *fRoot = fopen("../Amostras/ArquivosDFS/Raiz.txt","r");
-    if (fRoot == NULL){
-        printf("Arquivo não encontrado!\n");
-        return NULL;
+    int root;
+    int *n_vertices = (int *) malloc(sizeof(int) * 1);
+    int i=0;
+
+    while(!IsEmptyList(W_List)){
+        RemoveFirstElem(W_List, &root);
+        printf("root: %d\n", root);
+        AddFirstElem(W_List, root);
+
+        RecursiveDFS(G, root, e, B_Stack, W_List);
+
+        n_vertices[i] = GetNumElem(B_Stack);
+        PrintStack(B_Stack);
+        printf("num_elem: %d\n",n_vertices[i]);
+
+        i++;
+        n_vertices = (int *) realloc(n_vertices, i+1);
+
+        FreeStack(B_Stack);
+        B_Stack = CreateStack();
     }
 
-    //decremented for reading
-    char *sRoot = readline(fRoot);
-    int root = atoi(sRoot) - 1;
-    free(sRoot);
- 
-    //stack with last visited vertices
-    Stack *B_Stack = CreateStack();
-
-    //stores the time each vertex were last visited
-    int **local_clock = (int **) malloc(G->n_vertices * sizeof(int*));
-    for (int i=0; i<G->n_vertices; i++) local_clock[i] = (int *) malloc(2 * sizeof(int));
-    int time;
-
-    RecursiveDFS(G, root, e, &time, local_clock, B_Stack);
-
-    /* Print the B_Stack and the time each vertex had been found
+    //Print the B_Stack and the time each vertex had been found
+    printf("B_Stack:\n");
     PrintStack(B_Stack);
-    for (int i=0; i<G->n_vertices; i++)
-        printf("%d: %d\t%d\n",i+1,local_clock[i][0],local_clock[i][1]);
-    */
 
-
-    fclose(fRoot);
     FreeStack(B_Stack);
-    for (int i=0; i<G->n_vertices; i++) 
-        free(local_clock[i]);
-    free(local_clock);
+    FreeList(W_List);
+    free(n_vertices);
 
     return NULL;
 }

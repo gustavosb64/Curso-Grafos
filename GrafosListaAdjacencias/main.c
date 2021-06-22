@@ -12,7 +12,8 @@ int main(int argc, char *argv[]){
 
     FILE *file;
 //    file = fopen("../Amostras/ArquivosDFS/dfs_teste.txt","r");
-    file = fopen("../Amostras/aula9_arquivos_pajek/trial_dir_cic.txt","r");
+//    file = fopen("../Amostras/aula9_arquivos_pajek/trial_dir_cic.txt","r");
+    file = fopen("../Trabalhos/Trabalho03_DFS/exemplo3a/case1.pajek","r");
 
     int n_vertices = getNumVertices(file);
 

@@ -117,6 +117,11 @@ int PrintStack(Stack *stack){
     return 0;
 }
 
+int GetNumElem(Stack *stack){
+    if(IsEmptyStack(stack)) return -1;
+    return stack->n_elem;
+}
+
 int FreeStack(Stack *stack){
     
     if(IsEmptyStack(stack)) return 1;

@@ -64,5 +64,7 @@ void readPajek(Graph *G, FILE *file){
         if (directed) Insert(G, Mj-1, Mi-1, 1);
     }
 
+    free(string);
+
     return;
 }
