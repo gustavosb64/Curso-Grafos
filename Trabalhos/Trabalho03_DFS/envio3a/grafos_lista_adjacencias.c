@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "grafos_lista_adjacencias.h"
-#include "../EstruturasDeDados/Pilha/pilha_encadeada.h"
-#include "../EstruturasDeDados/Fila/fila_encadeada.h"
-#include "../EstruturasDeDados/Lista/lista_encadeada.h"
-#include "../ReadPajek/read_pajek.h"
+#include "EstruturasDeDados/Pilha/pilha_encadeada.h"
+#include "EstruturasDeDados/Fila/fila_encadeada.h"
+#include "EstruturasDeDados/Lista/lista_encadeada.h"
+#include "ReadPajek/read_pajek.h"
 
 typedef struct node_v_{
     int vertex;
@@ -348,7 +348,7 @@ Stack* DFS(Graph *G, elem e){
 
         n_vertices[i] = GetNumElem(B_Stack);
 //        PrintStack(B_Stack);
-        printf("num_elem: %d\n",n_vertices[i]);
+//        printf("num_elem: %d\n",n_vertices[i]);
 
         i++;
         n_vertices = (int *) realloc(n_vertices, sizeof(int)*(i+1));
