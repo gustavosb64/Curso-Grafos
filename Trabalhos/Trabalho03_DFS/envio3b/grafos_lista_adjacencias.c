@@ -301,9 +301,9 @@ void quicksort(int number[25],int first,int last){
 
 }
 
-void RecursiveDFS(Graph *G, int cur_index, elem e, Stack *B_Stack, List *W_List){
+int RecursiveDFS(Graph *G, int cur_index, elem e, Stack *B_Stack, List *W_List){
 
-    if(G[cur_index].colour != 'W') return;
+    if(G[cur_index].colour != 'W') return 1;
 
     int aux_e;
     SearchRemoveElem(W_List, &cur_index, &aux_e);
@@ -313,7 +313,7 @@ void RecursiveDFS(Graph *G, int cur_index, elem e, Stack *B_Stack, List *W_List)
 
         NodeV* aux_node = G[cur_index].Adj;
         while (aux_node != NULL){
-            RecursiveDFS(G, aux_node->vertex, e, B_Stack, W_List);
+            return RecursiveDFS(G, aux_node->vertex, e, B_Stack, W_List);
             aux_node = aux_node->next;
         }
 
@@ -322,7 +322,7 @@ void RecursiveDFS(Graph *G, int cur_index, elem e, Stack *B_Stack, List *W_List)
     G[cur_index].colour = 'B';
     AddElemStack(B_Stack, cur_index);
 
-    return;
+    return 0;
 }
 
 Stack* DFS(Graph *G, elem e){
@@ -336,35 +336,34 @@ Stack* DFS(Graph *G, elem e){
     }
 
     int root;
-    int *n_vertices = (int *) malloc(sizeof(int) * 1);
-
-    int i=0;
 
     while(!IsEmptyList(W_List)){
         root = GetFirstElem(W_List);
 
-        RecursiveDFS(G, root, e, B_Stack, W_List);
+        if(RecursiveDFS(G, root, e, B_Stack, W_List)){
+            printf("S\n");
 
-        n_vertices[i] = GetNumElem(B_Stack);
+            FreeStack(B_Stack);
+            free(B_Stack);
 
-        i++;
-        n_vertices = (int *) realloc(n_vertices, sizeof(int)*(i+1));
+            FreeList(W_List);
+            return NULL;
+        }
+
+        for(int i=0; i<G->n_vertices; i++){
+            G[i].colour = 'W';    
+        }
 
         FreeStack(B_Stack);
         B_Stack = CreateStack();
-    }
-
-    quicksort(n_vertices, 0, i-1);
-    printf("%d\n",i);
-    for (int j=i-1; j >= 0; j--){
-        printf("%d\n",n_vertices[j]);
     }
 
     FreeStack(B_Stack);
     free(B_Stack);
 
     FreeList(W_List);
-    free(n_vertices);
+
+    printf("N\n");
 
     return NULL;
 }
