@@ -4,4 +4,4 @@ all:
 run:
 	./main
 debug:
-	valgrind --track-origins=yes --show-track-origins=yes --leak-check=full --show-leak-kinds=all ./main
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./main

@@ -274,33 +274,6 @@ NodeV* BFS (Graph *G, elem e){
     return NULL;
 }
 
-void quicksort(int number[25],int first,int last){
-    int i, j, pivot, temp;
-
-    if(first<last){
-        pivot=first;
-        i=first;
-        j=last;
-
-        while(i<j){
-            while(number[i]<=number[pivot]&&i<last) i++;
-            while(number[j]>number[pivot]) j--;
-            if(i<j){
-                temp=number[i];
-                number[i]=number[j];
-                number[j]=temp;
-            }
-        }
-        
-        temp=number[pivot];
-        number[pivot]=number[j];
-        number[j]=temp;
-        quicksort(number,first,j-1);
-        quicksort(number,j+1,last);
-    }
-
-}
-
 void RecursiveDFS(Graph *G, int cur_index, elem e, Stack *B_Stack, List *W_List){
 
     if(G[cur_index].colour != 'W') return;
@@ -357,7 +330,6 @@ Stack* DFS(Graph *G, elem e){
         B_Stack = CreateStack();
     }
 
-    quicksort(n_vertices, 0, i-1);
 //    printf("----n_vertices----\n");
     printf("%d\n",i);
     for (int j=i-1; j >= 0; j--){
