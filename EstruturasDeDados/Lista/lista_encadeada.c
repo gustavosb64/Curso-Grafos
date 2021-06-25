@@ -148,6 +148,33 @@ int RemoveFirstElem(List *list, elem *e){
     return 0;
 }
 
+int GetFirstElem(List *list){
+
+    if(IsEmptyList(list)) return 1;
+
+    int e = list->first->val;
+    return e;
+}
+
+int RemoveFirstElemR(List *list){
+
+    if(IsEmptyList(list)) return 1;
+
+    int e = list->first->val;
+    
+    Node *aux_node = list->first->next;
+
+    if (aux_node != NULL)
+        aux_node->prev = NULL; 
+
+    free(list->first);
+    list->first = aux_node;
+
+    list->n_elem--;
+
+    return e;
+}
+
 int RemoveOddEven(List *list, elem *e){
     
     if(IsEmptyList(list)) return 1;

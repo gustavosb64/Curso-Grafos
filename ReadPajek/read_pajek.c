@@ -49,11 +49,19 @@ void readPajek(Graph *G, FILE *file){
     int Mi, Mj;
     char *str1, *str2;
     while(!feof(file)){
-    
+
         str1 = readline(file);
+        if (str1 == NULL){
+            free(str1); 
+            break;
+        }
         Mi = atoi(str1);
 
         str2 = readline(file);
+        if (str2 == NULL){
+            free(str2); 
+            break;
+        }
         Mj = atoi(str2);
         
         free(str1);
@@ -63,6 +71,8 @@ void readPajek(Graph *G, FILE *file){
         Insert(G, Mi-1, Mj-1, 1);
         if (directed) Insert(G, Mj-1, Mi-1, 1);
     }
+
+    free(string);
 
     return;
 }

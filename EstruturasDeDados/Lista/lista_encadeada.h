@@ -13,6 +13,7 @@ int AddFirstElem(List *list, elem e);
 int AddMiddleElem(List *list, elem e, int index);
 int RemoveLastElem(List *list, elem *e);
 int RemoveFirstElem(List *list, elem *e);
+int GetFirstElem(List *list);
 int RemoveOddEven(List *list, elem *e);
 int InList(List *list, elem e);
 Node* SearchElemList(List *list, elem e, int *error, int *index);
