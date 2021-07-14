@@ -5,11 +5,6 @@ class Color(Enum):
     BLACK = 2
     GRAY = 3
 
-class Pajek:
-
-    def __init__(self, filename):
-        self.filename = filename
-
 class NodeEdge:
 
     def __init__(self, vertex, weight):
@@ -25,20 +20,49 @@ class NodeV:
 
 class Graph:
 
-    def __init__(self, n_vertices=0):
-        self.n_vertices = n_vertices
+    def __init__(self, filename):
+
         self.vertices = []
-        for i in range (n_vertices):
-            n = NodeV(i, Color.WHITE)
-            self.vertices.append(n)
+        self.n_vertices = 0
+
+        #read edges for undirected graph
+        def readEdges(string):
+            for line in string:
+                vertices = line.split()
+                self.insertEdge(int(vertices[0])-1, int(vertices[1])-1, 1)
+                self.insertEdge(int(vertices[1])-1, int(vertices[0])-1, 1)
+
+        #read edges for directed graph
+        def readArcs(string):
+            for line in string:
+                vertices = line.split()
+                self.insertEdge(int(vertices[0])-1, int(vertices[1])-1, 1)
+
+        with open(filename, "r") as file:
+            string = file.readlines()
+
+            #Reading number of vertices
+            line = string[0].split()
+            self.n_vertices = int(line[1])
+
+            for i in range (self.n_vertices):
+                n = NodeV(i, Color.WHITE)
+                self.vertices.append(n)
+
+            line = string[1]
+            if("Edges" in line):
+                readEdges(string[2:])
+            elif("Arcs" in line):
+                readArcs(string[2:])
+
     
     def __str__(self):
         string = ""
 
         for i in range(0, self.n_vertices):
-            string = string + "vertex:"+str(i) + "\n"
+            string = string + "vertex:"+str(i+1) + "\n"
             for edge in self.vertices[i].AdjList:
-                string = string + "  |-> "+str(edge.vertex)
+                string = string + "  |-> "+str(edge.vertex+1)
                 string = string + "\n"
 
         return string
@@ -60,6 +84,12 @@ class Graph:
     #Checks whether vertex g_dest already has an edge with vertex g_src
     # If it doesn't, insert new edge between them
     def insertEdge(self, g_src, g_dest, weight):
+
+        """
+        print(self.n_vertices)
+        print(g_src)
+        print(g_dest)
+        """
         
         newEdge = NodeEdge(g_dest, weight) 
         self.vertices[g_src].AdjList.append(newEdge)
@@ -109,19 +139,16 @@ class Graph:
             for node in adj_list:
 
                 if(node.vertex == elem):
-                    print(L_White)
-                    print(L_Black)
-
                     print("Element found.")
                     return node
 
-                if(G.vertices[node.vertex].color == Color.WHITE):
-                    G.vertices[node.vertex].color = Color.GRAY
+                if(self.vertices[node.vertex].color == Color.WHITE):
+                    self.vertices[node.vertex].color = Color.GRAY
                     Q_Gray.append(node.vertex)
                     L_White.remove(node.vertex)
                     
             L_Black.append(q_index)
-            G.vertices[q_index].color = Color.BLACK
+            self.vertices[q_index].color = Color.BLACK
 
         print("Element not found!")
         return

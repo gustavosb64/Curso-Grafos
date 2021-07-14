@@ -1,5 +1,6 @@
 from graph import *
 
+"""
 G = Graph(5)
 
 print(G.getNumVertices())
@@ -31,4 +32,12 @@ print(G.isEulerian())
 G2 = Graph()
 print(G2.getNumVertices())
 
+G.BFS(3)
+
+print("n_vertices: "+str(G.n_vertices))
+"""
+
+G = Graph("../Amostras/amostra_pajek.txt")
+print(G)
+print("Is Eulerian? "+str(G.isEulerian()))
 G.BFS(3)
