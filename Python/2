@@ -11,6 +11,7 @@ class NodeEdge:
     def __init__(self, vertex, weight):
         self.vertex = vertex
         self.weight = weight
+        self.distance = np.inf
 
 class NodeV:
 
@@ -18,7 +19,6 @@ class NodeV:
         self.vertex = vertex
         self.color = color
         self.AdjList = []
-        self.distance = np.inf
 
 class Graph:
 
@@ -34,7 +34,7 @@ class Graph:
                 if (len(vertices_data) < 3):
                     weight = 1
                 else:
-                    weight = int(vertices_data[2])
+                    weight = vertices_data[2]
                 self.insertEdge(int(vertices_data[0])-1, int(vertices_data[1])-1, weight)
                 self.insertEdge(int(vertices_data[1])-1, int(vertices_data[0])-1, weight)
 
@@ -45,7 +45,7 @@ class Graph:
                 if (len(vertices_data) < 3):
                     weight = 1
                 else:
-                    weight = int(vertices_data[2])
+                    weight = vertices_data[2]
                 self.insertEdge(int(vertices_data[0])-1, int(vertices_data[1])-1, weight)
 
         with open(filename, "r") as file:
@@ -167,7 +167,7 @@ class Graph:
         L_Black = []
         Q_Gray = []
         
-        for i in range(1, self.n_vertices):
+        for i in range(0, self.n_vertices):
             self.vertices[i].color = Color.WHITE
             L_White.append(i)
 
@@ -184,7 +184,9 @@ class Graph:
                     print("Element found.")
                     return node
 
-                if(self.vertices[node.vertex].color == Color.WHITE): self.vertices[node.vertex].color = Color.GRAY Q_Gray.append(node.vertex)
+                if(self.vertices[node.vertex].color == Color.WHITE):
+                    self.vertices[node.vertex].color = Color.GRAY
+                    Q_Gray.append(node.vertex)
                     L_White.remove(node.vertex)
                     
             L_Black.append(q_index)
@@ -194,13 +196,14 @@ class Graph:
         return
 
     def printDist(self):
+
         for vertex in self.vertices:
-            for edge in vertex.AdjList:
+            for edge in vertices.AdjList:
                 print(edge.distance)
 
     #Dijkstra Algorithm
     #Search for the shortest path to each vertex
-    def dijkstra(self, src):
+    def dijkstra(self):
 
         L_White = []
         S_Black = []
@@ -208,21 +211,19 @@ class Graph:
         for i in range(0, self.n_vertices):
             self.vertices[i].color = Color.WHITE
             L_White.append(i)
-         
-        #print(L_White)
-        vertex = L_White.remove(src)
-        v_distance = 0
-        v_index = 0
-        smallest = v_distance
-        while(len(L_White) > 0):
-            adj_list = self.vertices[v_index].AdjList
-            distList = []
 
-            for node in adj_list:
-                if(v_distance < self.vertices[node.vertex].distance):
-                    self.vertices[node.vertex].distance = v_distance
-                    
-            S_Black.append(v_index)
-             
-            #print("--------------------")
+        #print(L_White)
+        i = 0
+        for vertex in L_White:
+            v_distance = 0
+            for edge in self.vertices[vertex].AdjList:
+                if (edge.distance > v_distance):
+                    edge.distance = v_distance + edge.weight
+            
+            printDist()
             i += 1
+
+
+    
+
+

@@ -37,7 +37,12 @@ G.BFS(3)
 print("n_vertices: "+str(G.n_vertices))
 """
 
-G = Graph("../Amostras/amostra_pajek.txt")
+#filename = "../Amostras/amostra_pajek.txt"
+filename = "../Trabalhos/Trabalho04_Dijkstra/case1.pajek"
+
+G = Graph(filename)
 print(G)
 print("Is Eulerian? "+str(G.isEulerian()))
 G.BFS(3)
+G.DFS()
+G.dijkstra()
