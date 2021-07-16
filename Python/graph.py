@@ -72,7 +72,7 @@ class Graph:
         for i in range(0, self.n_vertices):
             string = string + "vertex:"+str(i+1) + "\n"
             for edge in self.vertices[i].AdjList:
-                string = string + "  |-> "+str(edge.vertex+1)
+                string = string + "  |-> "+str(edge.vertex+1)+"  "+str(edge.weight)
                 string = string + "\n"
 
         return string
@@ -184,7 +184,9 @@ class Graph:
                     print("Element found.")
                     return node
 
-                if(self.vertices[node.vertex].color == Color.WHITE): self.vertices[node.vertex].color = Color.GRAY Q_Gray.append(node.vertex)
+                if(self.vertices[node.vertex].color == Color.WHITE):
+                    self.vertices[node.vertex].color = Color.GRAY 
+                    Q_Gray.append(node.vertex)
                     L_White.remove(node.vertex)
                     
             L_Black.append(q_index)
@@ -200,29 +202,59 @@ class Graph:
 
     #Dijkstra Algorithm
     #Search for the shortest path to each vertex
-    def dijkstra(self, src):
+    def dijkstra(self, idx_start):
 
         L_White = []
         S_Black = []
 
         for i in range(0, self.n_vertices):
             self.vertices[i].color = Color.WHITE
-            L_White.append(i)
-         
-        #print(L_White)
-        vertex = L_White.remove(src)
-        v_distance = 0
-        v_index = 0
-        smallest = v_distance
-        while(len(L_White) > 0):
-            adj_list = self.vertices[v_index].AdjList
-            distList = []
+            self.vertices[i].distance = np.inf
+            L_White.append(self.vertices[i])
+        
+        cur_idx = idx_start
+        cur_vertex = self.vertices[cur_idx]
+        cur_vertex.distance = 0
 
-            for node in adj_list:
-                if(v_distance < self.vertices[node.vertex].distance):
-                    self.vertices[node.vertex].distance = v_distance
-                    
-            S_Black.append(v_index)
-             
-            #print("--------------------")
-            i += 1
+        while(len(L_White) > 0):
+
+            print("L_White")
+            for vertex in L_White:
+                print(vertex.vertex)
+            print("-----")
+            print("cur_v: "+str(cur_vertex.vertex))
+
+            if (len(cur_vertex.AdjList) > 0):
+                next_vertex = None
+                next_dist = np.inf
+
+            for node in cur_vertex.AdjList:
+                node_vertex = self.vertices[node.vertex]
+                cur_distance = cur_vertex.distance + node.weight
+
+                if (node_vertex.color == Color.WHITE):
+                    if (cur_distance < node_vertex.distance):
+                        node_vertex.distance = cur_distance
+                    if (cur_distance < next_dist):
+                        next_dist = cur_distance
+                        next_vertex = self.vertices[node.vertex]
+                
+            if (cur_vertex.color == Color.WHITE):
+                print("remove: "+str(cur_vertex.vertex))
+                L_White.remove(cur_vertex)
+                S_Black.append(cur_vertex)
+                cur_vertex.color = Color.BLACK
+
+            if(next_vertex != None):
+                cur_vertex = next_vertex
+            else:
+                break
+
+        array_distance = []
+        for vertex in self.vertices:
+            array_distance.append(vertex.distance)
+
+        print(array_distance)
+
+
+            

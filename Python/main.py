@@ -45,4 +45,10 @@ print(G)
 print("Is Eulerian? "+str(G.isEulerian()))
 G.BFS(3)
 G.DFS()
-G.dijkstra()
+"""
+for i in range (6):
+    G.dijkstra(i)
+"""
+G.dijkstra(0)
+
+
