@@ -21,10 +21,6 @@ class NodeV:
         self.distance = np.inf
 
 class Graph:
-    """
-    NodeV vertices[]
-    int n_vertices
-    """
 
     def __init__(self, filename):
 
@@ -80,28 +76,21 @@ class Graph:
 
         return string
 
-    """
-    Checks whether graph is empty
-    """
     def isEmpty(self):
         if (len(self.vertices) == 0):
             return True
         return False
 
 
-    """
-    Checks whether vertex g_dest already has an edge with vertex g_src
-        If it doesn't, insert new edge between them
-    """
+    #Checks whether vertex g_dest already has an edge with vertex g_src
+    # If it doesn't, insert new edge between them
     def insertEdge(self, g_src, g_dest, weight):
 
         newEdge = NodeEdge(g_dest, weight) 
         self.vertices[g_src].AdjList.append(newEdge)
         return
 
-    """
-    Searches in g_src edge between g_dest and removes it
-    """
+    #Searches in g_src edge between g_dest and removes it
     def removeEdge(self, g_src, g_dest):
 
         for edge in self.vertices[g_src].AdjList:
@@ -110,15 +99,11 @@ class Graph:
                 return
         return
 
-    """
-    Get the number of vertices adjacents to vertex v
-    """
+    #Get the number of vertices adjacents to vertex v
     def getVertexDegree(self, v):
         return len(self.vertices[v].AdjList)
         
-    """
-    Checks whether graph is Eulerian 
-    """
+    #Checks whether graph is Eulerian 
     def isEulerian(self):
         n_odd = 0
 
@@ -204,6 +189,11 @@ class Graph:
         print("Element not found!")
         return
 
+    def printDist(self):
+        for vertex in self.vertices:
+            for edge in vertex.AdjList:
+                print(edge.distance)
+
     """
     Dijkstra Algorithm
         Search for the shortest path to each vertex
@@ -242,4 +232,4 @@ class Graph:
         for vertex in self.vertices:
             array_distance.append(vertex.distance)
 
-        print(array_distance)
+        return array_distance
