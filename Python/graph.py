@@ -218,11 +218,7 @@ class Graph:
 
         while(len(L_White) > 0):
 
-            print("L_White")
-            for vertex in L_White:
-                print(vertex.vertex)
-            print("-----")
-            print("cur_v: "+str(cur_vertex.vertex))
+            #print("cur_vertex: "+str(cur_vertex.vertex+1))
 
             if (len(cur_vertex.AdjList) > 0):
                 next_vertex = None
@@ -235,26 +231,30 @@ class Graph:
                 if (node_vertex.color == Color.WHITE):
                     if (cur_distance < node_vertex.distance):
                         node_vertex.distance = cur_distance
-                    if (cur_distance < next_dist):
-                        next_dist = cur_distance
-                        next_vertex = self.vertices[node.vertex]
                 
             if (cur_vertex.color == Color.WHITE):
-                print("remove: "+str(cur_vertex.vertex))
+                #print("remove: "+str(cur_vertex.vertex))
                 L_White.remove(cur_vertex)
                 S_Black.append(cur_vertex)
                 cur_vertex.color = Color.BLACK
 
-            if(next_vertex != None):
-                cur_vertex = next_vertex
-            else:
-                break
+            L_White = sorted(L_White, key=lambda vertex: vertex.distance)
+            """
+            for vertex in L_White:
+                print("v: "+str(vertex.vertex+1)+" v_dist: "+str(vertex.distance))
+            print("------------------------------")
+            """
+
+            if(len(L_White) > 0):
+                cur_vertex = L_White[0]
 
         array_distance = []
         for vertex in self.vertices:
             array_distance.append(vertex.distance)
 
         print(array_distance)
-
+"""
+newlist = sorted(cArray, key=lambda classe: classe.x)
+"""
 
             
