@@ -1,11 +1,6 @@
 from enum import Enum
 import numpy as np
 
-class Color(Enum):
-    WHITE = 1
-    BLACK = 2
-    GRAY = 3
-
 class NodeEdge:
 
     def __init__(self, vertex, weight):
@@ -60,7 +55,7 @@ class Graph:
             self.n_vertices = int(line[1])
 
             for i in range (self.n_vertices):
-                n = NodeV(i, Color.WHITE)
+                n = NodeV(i, 'W')
                 self.vertices.append(n)
 
             line = string[1]
@@ -132,40 +127,43 @@ class Graph:
     Depth First Search
         Counts the number of components and how many vertices there are in each of them
     """
-    def recursiveDFS(self, cur_index, S_Black, L_White):
-
-        if (self.vertices[cur_index].color != Color.WHITE):
-            return
-
-        L_White.remove(cur_index)
-
-        cur_vertex = self.vertices[cur_index]
-        if(len(cur_vertex.AdjList) > 0):
-
-            cur_vertex.color = Color.GRAY
-
-            for node in cur_vertex.AdjList:
-                self.recursiveDFS(node.vertex, S_Black, L_White)
-
-        cur_vertex.color = Color.BLACK
-        S_Black.append(cur_index)
-
     def DFS(self):
         
+        def recursiveDFS(cur_index, S_Black, L_White):
+
+            if (self.vertices[cur_index].color != 'W'):
+                return
+
+            L_White.remove(cur_index)
+
+            cur_vertex = self.vertices[cur_index]
+            if(len(cur_vertex.AdjList) > 0):
+
+                cur_vertex.color = 'G'
+
+                for node in cur_vertex.AdjList:
+                    recursiveDFS(node.vertex, S_Black, L_White)
+
+            cur_vertex.color = 'B'
+            S_Black.append(cur_index)
+
+
         L_White = []
         S_Black = []
 
         for i in range(0, self.n_vertices):
-            self.vertices[i].color = Color.WHITE
+            self.vertices[i].color = 'W'
             L_White.append(i)
 
         n_vertices_component = []
 
         while(len(L_White) > 0):
             root = L_White[0]
-            self.recursiveDFS(root, S_Black, L_White)
+            recursiveDFS(root, S_Black, L_White)
 
             n_vertices_component.append(len(S_Black))
+
+        print("DFS percorrida")
 
     """
     Breadth First Search
@@ -177,11 +175,11 @@ class Graph:
         Q_Gray = []
         
         for i in range(1, self.n_vertices):
-            self.vertices[i].color = Color.WHITE
+            self.vertices[i].color = 'W'
             L_White.append(i)
 
         Q_Gray.append(0)
-        self.vertices[0].color = Color.GRAY
+        self.vertices[0].color = 'G'
 
         while(len(Q_Gray) != 0):
             q_index = Q_Gray.pop(0)
@@ -193,13 +191,13 @@ class Graph:
                     print("Element found.")
                     return node
 
-                if(self.vertices[node.vertex].color == Color.WHITE):
-                    self.vertices[node.vertex].color = Color.GRAY 
+                if(self.vertices[node.vertex].color == 'W'):
+                    self.vertices[node.vertex].color = 'G' 
                     Q_Gray.append(node.vertex)
                     L_White.remove(node.vertex)
                     
             L_Black.append(q_index)
-            self.vertices[q_index].color = Color.BLACK
+            self.vertices[q_index].color = 'B'
 
         print("Element not found!")
         return
@@ -212,7 +210,7 @@ class Graph:
 
         L_White = []
         for i in range(0, self.n_vertices):
-            self.vertices[i].color = Color.WHITE
+            self.vertices[i].color = 'W'
             self.vertices[i].distance = np.inf
             L_White.append(self.vertices[i])
 
@@ -230,12 +228,12 @@ class Graph:
                 node_vertex = self.vertices[node.vertex]
                 cur_distance = cur_vertex.distance + node.weight
 
-                if (node_vertex.color == Color.WHITE and cur_distance < node_vertex.distance):
+                if (node_vertex.color == 'W' and cur_distance < node_vertex.distance):
                     node_vertex.distance = cur_distance
                 
-            if (cur_vertex.color == Color.WHITE):
+            if (cur_vertex.color == 'W'):
                 L_White.remove(cur_vertex)
-                cur_vertex.color = Color.BLACK
+                cur_vertex.color = 'B'
 
         #putting all final distances in an arraylist
         array_distance = []
@@ -243,3 +241,47 @@ class Graph:
             array_distance.append(vertex.distance)
 
         print(array_distance)
+
+    """
+    Prim's Algorithm
+        Search for the minimum spanning tree
+    """
+    def prim(self):
+
+        L_White = []
+        L_Black = []
+        for i in range(0, self.n_vertices):
+            self.vertices[i].color = 'W'
+            self.vertices[i].distance = np.inf
+            L_White.append(self.vertices[i])
+
+        #setting start for 0 
+        cur_idx = 0
+        self.vertices[cur_idx].distance = 0
+
+        sum_distance = 0
+        while(len(L_White) > 0):
+
+            #sort L_White according to lowest distance
+            L_White = sorted(L_White, key=lambda vertex: vertex.distance)
+            cur_vertex = L_White[0]
+
+            for node in cur_vertex.AdjList:
+                node_vertex = self.vertices[node.vertex]
+
+                if (node_vertex.color == 'W' and node.weight < node_vertex.distance):
+                    node_vertex.distance = node.weight
+                
+            if (cur_vertex.color == 'W'):
+                L_White.remove(cur_vertex)
+                cur_vertex.color = 'B'
+                L_Black.append(cur_vertex)
+                sum_distance += cur_vertex.distance
+
+        print("Minimum spanning tree: ", end="")
+        for v in L_Black:
+            print(v.vertex, end = " ")
+        print()
+
+        print("Minimum spanning tree total weight:",sum_distance)
+

@@ -38,15 +38,18 @@ print("n_vertices: "+str(G.n_vertices))
 """
 
 #filename = "../Amostras/amostra_pajek.txt"
-filename = "../Trabalhos/Trabalho04_Dijkstra/case1.pajek"
+#filename = "../Trabalhos/Trabalho04_Dijkstra/case1.pajek"
+filename = "../Trabalhos/Trabalho05_Prim/case1.pajek"
 
 G = Graph(filename)
 print(G)
 print("Is Eulerian? "+str(G.isEulerian()))
 G.BFS(3)
 G.DFS()
-
+"""
 for i in range (6):
     G.dijkstra(i)
+"""
+G.prim()
 
 
